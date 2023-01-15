@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Button, Box } from '@mui/material';
 import InfoTable from '../InfoTable'
 
   type TPolicy = {
@@ -39,6 +40,30 @@ function PolicyholdersView() {
         return policyArr
     }
 
+    const postPolicy = () => {
+       const postPayload = {
+        "name": 'Derek',
+        "age": '76',
+        "address": {
+          "line1": '1412 E 33rd St',
+          "line2": '',
+          "city": 'Minneapolis',
+          "state": 'MN',
+          "postalCode": '55427',
+        },
+        "phoneNumber": '612-724-9989',
+    }
+
+       fetch('https://fe-interview-technical-challenge-api-git-main-sure.vercel.app/api/policyholders', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(postPayload)
+       })
+            .then( (response) => response.json())
+    }
+
     useEffect( () => {
         fetch('https://fe-interview-technical-challenge-api-git-main-sure.vercel.app/api/policyholders')
             .then( (response) => response.json())
@@ -47,7 +72,27 @@ function PolicyholdersView() {
 
     return (
         <>
-        {policyholderData.length > 0 ? <InfoTable header="Policyholder Details" rows={policyholderData} /> : null}
+        {
+            policyholderData.length > 0
+            ?
+                <Box
+                    textAlign='center'
+                >
+                    <InfoTable header="Policyholder Details" rows={policyholderData} /> 
+                    <Button
+                        onClick={postPolicy}
+                        variant="contained"
+                        color="primary"
+                        size="large"
+                        sx={{
+                            marginTop: '20px',
+                            textTransform: 'none'
+                        }}
+                    >
+                        Add a policyholder
+                    </Button>
+                </Box>
+            : null}
        </>
     )
 }
