@@ -23,6 +23,7 @@ const policyKeys = ['Name', 'Age', 'Address', 'Phone number', 'Primary policyhol
 
 function PolicyholdersView() {
     const [policyholderData, setPolicyholderData] = useState<Array<TFormattedPolicy>>([])
+    const [postedPolicy, setPostedPolicy] = useState<Array<TFormattedPolicy>>([])
   
     const buildRows = (data: TPayload) => {
         let policyArr: Array<TFormattedPolicy> = []
@@ -62,6 +63,7 @@ function PolicyholdersView() {
             body: JSON.stringify(postPayload)
        })
             .then( (response) => response.json())
+            .then( (json) => setPostedPolicy(buildRows(json)))
     }
 
     useEffect( () => {
@@ -71,29 +73,27 @@ function PolicyholdersView() {
     }, [])
 
     return (
-        <>
-        {
-            policyholderData.length > 0
+        <Box textAlign='center'>
+            {
+                postedPolicy.length > 0
             ?
-                <Box
-                    textAlign='center'
-                >
-                    <InfoTable header="Policyholder Details" rows={policyholderData} /> 
-                    <Button
-                        onClick={postPolicy}
-                        variant="contained"
-                        color="primary"
-                        size="large"
-                        sx={{
-                            marginTop: '20px',
-                            textTransform: 'none'
-                        }}
-                    >
-                        Add a policyholder
-                    </Button>
-                </Box>
-            : null}
-       </>
+                <InfoTable header="Policyholder Details" rows={postedPolicy} />
+            :
+                <InfoTable header="Policyholder Details" rows={policyholderData} />
+            }
+            <Button
+                onClick={postPolicy}
+                variant="contained"
+                color="primary"
+                size="large"
+                sx={{
+                    marginTop: '20px',
+                    textTransform: 'none'
+                 }}
+            >
+                Add a policyholder
+            </Button>
+       </Box>
     )
 }
 
