@@ -43,6 +43,7 @@ function NavBar({ links }: TNavBar) {
           style={
             ({ isActive }) => isActive ? activeStyle : {}
           }
+          className={'default'}
           data-testid={dataTestId}
         >
           {text}
