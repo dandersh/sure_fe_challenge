@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button, Box } from '@mui/material';
-import InfoTable from '../InfoTable'
+import InfoTable from '../InfoTable';
 
   type TPolicy = {
       address?: object;
@@ -19,26 +19,27 @@ import InfoTable from '../InfoTable'
       value: string;
   }
 
-const policyKeys = ['Name', 'Age', 'Address', 'Phone number', 'Primary policyholder']
+const policyKeys = ['Name', 'Age', 'Address', 'Phone number', 'Primary policyholder'];
+const dataMap: Map<string, TPayload | any> = new Map();
 
 function PolicyholdersView() {
-    const [policyholderData, setPolicyholderData] = useState<Array<TFormattedPolicy>>([])
-    const [postedPolicy, setPostedPolicy] = useState<Array<TFormattedPolicy>>([])
+    const [policyholderData, setPolicyholderData] = useState<Array<TFormattedPolicy>>([]);
+    const [postedPolicy, setPostedPolicy] = useState<Array<TFormattedPolicy>>([]);
   
     const buildRows = (data: TPayload) => {
         let policyArr: Array<TFormattedPolicy> = []
         data.policyHolders.map( (policy: TPolicy) => {
-            const values = Object.values(policy)
+            const values = Object.values(policy);
             policyKeys.map( (k, index) => {
                 if (typeof values[index] !== 'object') {
-                    policyArr.push({key: k, value: values[index].toString()})
+                    policyArr.push({key: k, value: values[index].toString()});
                 } else {
-                    policyArr.push({key: k, value: JSON.stringify(values[index])})
+                    policyArr.push({key: k, value: JSON.stringify(values[index])});
                 }    
-            })
-            return policyArr      
-        })
-        return policyArr
+            });
+            return policyArr;      
+        });
+        return policyArr;
     }
 
     const postPolicy = () => {
@@ -64,12 +65,23 @@ function PolicyholdersView() {
        })
             .then( (response) => response.json())
             .then( (json) => setPostedPolicy(buildRows(json)))
+            .catch( (err) => console.error(err))
     }
 
     useEffect( () => {
-        fetch('https://fe-interview-technical-challenge-api-git-main-sure.vercel.app/api/policyholders')
+        if (!dataMap.has('policyHolders')) {
+            fetch('https://fe-interview-technical-challenge-api-git-main-sure.vercel.app/api/policyholders')
             .then( (response) => response.json())
-            .then( (json) => setPolicyholderData(buildRows(json)))
+            .then( (json) => {
+                setPolicyholderData(buildRows(json))
+                return json;
+            })
+            .then( (json) => dataMap.set('policyHolders', json))
+            .then(() => console.log(dataMap.has('policyHolders')))
+            .catch( (err) => console.error(err))
+        } else {
+            setPolicyholderData(buildRows(dataMap.get('policyHolders')))
+        }
     }, [])
 
     return (
