@@ -34,6 +34,7 @@ function PolicyholdersView() {
     const [policyholderData, setPolicyholderData] = useState<Array<TFormattedPolicy>>([]);
     const [postedPolicy, setPostedPolicy] = useState<Array<TFormattedPolicy>>([]);
   
+    // Take the payload from the back end and build it into the InfoTable row format of {key: '', value: ''}
     const buildRows = (data: TPayload) => {
         let policyArr: Array<TFormattedPolicy> = []
         data.policyHolders.map( (policy: TPolicy) => {
@@ -42,6 +43,7 @@ function PolicyholdersView() {
                 if (typeof values[index] !== 'object') {
                     policyArr.push({key: k, value: values[index].toString()});
                 } else {
+                    // Address returns an object as its value so we destructure and display it as comma seperated values
                     const {city, line1, line2, postalCode, state}: any = values[index];
                     policyArr.push({key: k, value: [line1, line2, city, postalCode, state].toString()});
                 }    
@@ -78,6 +80,7 @@ function PolicyholdersView() {
     }
 
     useEffect( () => {
+        // Here dataMap is used to cache our policyholders api call to prevent unneeded http calls
         if (!dataMap.has('policyHolders')) {
             fetch('https://fe-interview-technical-challenge-api-git-main-sure.vercel.app/api/policyholders')
             .then( (response) => response.json())
