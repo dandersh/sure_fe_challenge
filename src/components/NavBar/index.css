@@ -1,0 +1,10 @@
+.default {
+    color: #fff;
+    text-decoration: none;
+    margin-bottom: 16px;
+    cursor: pointer;
+}
+
+a:hover {
+    text-decoration: underline;
+}
