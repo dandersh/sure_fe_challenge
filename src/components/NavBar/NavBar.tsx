@@ -12,8 +12,9 @@ type TNavBar = {
 function NavBar({ links }: TNavBar) {
 
   let activeStyle = {
-    borderRadius: '5px',
-    backgroundColor: 'magenta'
+    borderRadius: '3px',
+    backgroundColor: 'slategrey',
+    border: '2px dashed'
   };
 
   return (
